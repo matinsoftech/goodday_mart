@@ -1,0 +1,40 @@
+body {
+    font-family: sans-serif;
+}
+.tsb {
+    font-weight: 600;
+}
+.tb {
+    font-weight: 700;
+}
+.twr {
+    font-weight: 400;
+}
+.rr {
+    font-family:  sans-serif;
+    font-weight: 400;
+}
+.rb {
+    font-family:  sans-serif;
+    font-weight: 700;
+}
+.navbar-brand img {
+    /* margin-bottom: -60px; */
+    /* height: 140px !important; */
+    height: 105px !important;
+}
+@media (max-width: 991.98px) {
+    .navbar-brand img {
+    margin-bottom: 0;
+    height: 70px !important;
+    }
+}
+@media (max-width: 767.98px) {
+    .navbar-brand img {
+        margin-bottom: 0px;
+        height: 80px !important;
+    }
+}
+.aspect-1 {
+    aspect-ratio: 1;
+}

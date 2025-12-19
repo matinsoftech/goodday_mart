@@ -1,0 +1,137 @@
+.breadcrumb .home {
+    font-size: 16px;
+    font-weight: 400;
+    color: #6E777D;
+}
+
+.breadcrumb .products {
+    font-size: 16px;
+    font-weight: 500;
+    color: #078A3A;
+}
+
+.breadcrumb {
+    background-color: unset !important;
+    gap: 1rem !important;
+    margin: 0 !important;
+}
+
+.search-page-header {
+    border-radius: unset;
+    border-bottom: 1px solid #E2E2E2;
+}
+
+.count-results span {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20.8px;
+    color: #6E777D;
+}
+
+.border-sidesearch {
+    border: 1px solid #E2E2E2;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.form-group input {
+    padding: 0 !important;
+}
+
+/* Hide the default checkbox */
+.checkbox-wrapper-48 input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+}
+
+/* Styling the checked state */
+.checkbox-wrapper-48 input[type="checkbox"]:checked {
+    background-color: #067531; /* Change this to your desired color */
+    border-color: transparent;
+}
+
+/* Creating the tick mark */
+.checkbox-wrapper-48 input[type="checkbox"]:checked::before {
+    content: '\2713'; /* Unicode for tick mark */
+    position: absolute;
+    font-size: 16px;
+    color: white;
+    top: -2px;
+    left: 2px;
+}
+
+/* Optional hover effect */
+.checkbox-wrapper-48 input[type="checkbox"]:hover {
+    border-color: var(--primary-color);
+}
+
+
+.categories_text {
+    color: #078A3A;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17px;
+    text-transform: capitalize;
+}
+
+.search-top-filter {
+    background: #F3F4F6;
+    border-radius: 6px; 
+}
+
+.search-card-filter {
+    border-top: 1px solid #D7DDE8
+}
+
+.btn-search-filter {
+    border: 1px solid #078A3A !important;
+    background: #fff !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: 19.2px !important;
+    color: #078A3A !important;
+}
+
+.filter-select-btn {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    height: 40px;
+}
+
+.items-card-container {
+    background: #F5F6F7;
+    border-radius: 6px;
+}
+
+.product-single-hover.style--card {
+    /* background-color: unset !important;
+    box-shadow: unset !important; */
+}
+
+.product-item_container a {
+    font-weight: 700;
+    line-height: 20px;
+    color: #000 !important;
+}
+
+.product-size {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18.2px;
+    color: #6E777D;
+}
+
+.product-price .text-accent {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 26px;
+    color: #DC2626 !important;
+}
