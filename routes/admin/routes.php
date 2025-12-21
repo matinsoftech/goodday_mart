@@ -146,6 +146,7 @@ use App\Http\Controllers\Admin\OrderReportController;
 use App\Http\Controllers\Admin\ProductWishlistReportController;
 use App\Http\Controllers\Admin\Settings\ReactSettingsController;
 use App\Enums\ViewPaths\Admin\ReactSetup;
+use App\Http\Controllers\Admin\AdvertisementController;
 use App\Http\Controllers\Admin\PosterController;
 
 
@@ -167,6 +168,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
             Route::get(Dashboard::ORDER_STATISTICS[URI], 'getOrderStatistics')->name('order-statistics');
         });
     });
+
+    Route::resource('advertisement', AdvertisementController::class);
 
     Route::get('logout', [LoginController::class, 'logout'])->name('logout');
     Route::group(['prefix' => 'pos', 'as' => 'pos.','middleware'=>['module:pos_management']], function () {
