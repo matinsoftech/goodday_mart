@@ -103,7 +103,7 @@
                     <div class="col-12 pb-0 d-md-none px-max-md-0 d-none">
                         <div class="owl-theme owl-carousel flash-deal-slider-mobile">
                             @foreach ($web_config['flash_deals']->products as $key => $deal)
-                                @if ($key < 10 && $deal->product)
+                                @if ($deal->product)
                                     @include('web-views.partials._product-card-1', [
                                         'product' => $deal->product,
                                         'decimal_point_settings' => $decimal_point_settings,
@@ -159,7 +159,7 @@
             <div class="owl-theme owl-carousel flash-deal-slider">
             @php($index = 0)
             @foreach ($web_config['flash_deals']->products as $key => $deal)
-                @if ($index < 10 && $deal->product)
+                @if ($deal->product)
                     @php($index = $index + 1)
                     {{-- class="col-lg-2 col-6 col-sm-4 col-md-3 d-none d-md-block px-max-md-0" --}}
                     <div>
