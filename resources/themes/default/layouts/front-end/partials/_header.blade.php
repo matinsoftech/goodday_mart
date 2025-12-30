@@ -1536,6 +1536,33 @@
 
         // Mobile Menu Functionality
         $(document).ready(function() {
+            if ($(window).width() >= 768) {
+
+                // Main categories
+                $('.nav-item.dropdown').hover(
+                    function () {
+                        $(this).addClass('show');
+                        $(this).children('.dropdown-menu').addClass('show');
+                    },
+                    function () {
+                        $(this).removeClass('show');
+                        $(this).children('.dropdown-menu').removeClass('show');
+                    }
+                );
+
+                // Subcategories (dropdown-submenu)
+                $('.dropdown-submenu').hover(
+                    function () {
+                        $(this).addClass('show');
+                        $(this).children('.sub-menu').addClass('show');
+                    },
+                    function () {
+                        $(this).removeClass('show');
+                        $(this).children('.sub-menu').removeClass('show');
+                    }
+                );
+            }
+
             // Add overlay to body
             $('body').append('<div class="mobile-menu-overlay"></div>');
 
