@@ -1,50 +1,18 @@
-# Dependencies
 /node_modules
-/vendor
-
-# Laravel
 /public/hot
-/public/themes
 /public/storage
+/public/themes
 /storage/*.key
 /storage/app/*
-/storage/framework/*
-/storage/logs/*
-/storage_old
-/storage_old/*.key
-/storage_old/app/*
-/storage_old/framework/*
-/storage_old/logs/*
-
-# Environment files
+/vendor
+.vscode
+.idea
 .env
-.env.*
-!.env.example
-
-# IDE / OS
-.vscode/
-.idea/
-.DS_Store
-
-# Testing
+.env.backup
 .phpunit.result.cache
-
-# Homestead
 Homestead.json
 Homestead.yaml
-
-# Logs
-npm-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Composer
+npm-debug.log
+yarn-error.log
 composer-setup.php
-
-# Cache
-.phpunit.result.cache
-
-# Custom / local-only
-php.ini
-backup.json
-auto_builder_sh.sh
+.DS_Store

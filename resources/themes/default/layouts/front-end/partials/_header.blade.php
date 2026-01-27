@@ -1005,8 +1005,8 @@
         position: absolute !important;
         left: auto !important;
         top: auto !important;
-        /* margin-top: 5px !important; */
-        margin-left: 200px !important;
+        margin-top: 5px !important;
+        margin-left: 20px !important;
         width: calc(100% - 20px) !important;
         min-width: auto !important;
         max-height: none !important;
@@ -1329,7 +1329,7 @@
                                 <i class="fa fa-th-large mr-3"></i>{{ translate('Categories') }}
                             </a>
 
-                            <ul class="dropdown-menu __dropdown-menu-sizing text-align-direction dropdown-menu-{{ Session::get('direction') === 'rtl' ? 'right' : 'left' }} scroll-bar" aria-labelledby="categoryDropdown">
+                            <ul class="dropdown-menu __dropdown-menu-sizing text-align-direction dropdown-menu-{{ Session::get('direction') === 'rtl' ? 'right' : 'left' }} scroll-bar" style="height: 54vh; overflow-y: scroll !important;" aria-labelledby="categoryDropdown">
                                 @foreach($categories as $category)
                                     <li class="__inline-17 dropdown-submenu position-relative">
                                         <div class="dropdown-item d-flex justify-content-between align-items-center p-0">
@@ -1536,33 +1536,6 @@
 
         // Mobile Menu Functionality
         $(document).ready(function() {
-            if ($(window).width() >= 768) {
-
-                // Main categories
-                $('.nav-item.dropdown').hover(
-                    function () {
-                        $(this).addClass('show');
-                        $(this).children('.dropdown-menu').addClass('show');
-                    },
-                    function () {
-                        $(this).removeClass('show');
-                        $(this).children('.dropdown-menu').removeClass('show');
-                    }
-                );
-
-                // Subcategories (dropdown-submenu)
-                $('.dropdown-submenu').hover(
-                    function () {
-                        $(this).addClass('show');
-                        $(this).children('.sub-menu').addClass('show');
-                    },
-                    function () {
-                        $(this).removeClass('show');
-                        $(this).children('.sub-menu').removeClass('show');
-                    }
-                );
-            }
-
             // Add overlay to body
             $('body').append('<div class="mobile-menu-overlay"></div>');
 

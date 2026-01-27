@@ -41,7 +41,6 @@
     use App\Enums\ViewPaths\Admin\SocialMediaChat;
     use App\Enums\ViewPaths\Admin\ShippingMethod;
     use App\Enums\ViewPaths\Admin\PaymentMethod;
-    use App\Enums\ViewPaths\Admin\Advertisement;
     use App\Utils\Helpers;
 
 @endphp
@@ -84,16 +83,6 @@
                                 <i class="tio-home-vs-1-outlined nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements--removeAfterHypens text-truncate">
                                     {{ translate('dashboard') }}
-                                </span>
-                            </a>
-                        </li>
-                        <li
-                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/advertisement' . Advertisement::VIEW[URI]) ? 'active' : '' }}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link" title="{{ translate('advertisement') }}"
-                                href="{{ route('admin.advertisement.index') }}">
-                                <i class="tio-speaker nav-icon"></i>
-                                <span class="navbar-vertical-aside-mini-mode-hidden-elements--removeAfterHypens text-truncate">
-                                    {{ translate('advertisement') }}
                                 </span>
                             </a>
                         </li>

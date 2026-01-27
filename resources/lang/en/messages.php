@@ -8027,11 +8027,4 @@
   'product_already_added' => 'Product already added',
   'You_already_subscribed_this_site' => 'You already subscribed this site',
   'advertisement' => 'Advertisement',
-  'Advertisement' => 'Advertisement',
-  'Manage Advertisements' => 'Manage Advertisements',
-  'Save Advertisements' => 'Save Advertisements',
-  'Enter advertisement text' => 'Enter advertisement text',
-  'Advertisement Text' => 'Advertisement Text',
-  'Saved Advertisements' => 'Saved Advertisements',
-  'Are you sure ' => 'Are you sure ',
 );

@@ -14,6 +14,7 @@ use App\Traits\ProductTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ProductRepository implements ProductRepositoryInterface
@@ -21,20 +22,22 @@ class ProductRepository implements ProductRepositoryInterface
     use ProductTrait;
 
     public function __construct(
-        private readonly Product $product,
-        private readonly Translation $translation,
-        private readonly Tag $tag,
-        private readonly Cart $cart,
-        private readonly Wishlist $wishlist,
+        private readonly Product          $product,
+        private readonly Translation      $translation,
+        private readonly Tag              $tag,
+        private readonly Cart             $cart,
+        private readonly Wishlist         $wishlist,
         private readonly FlashDealProduct $flashDealProduct,
-        private readonly DealOfTheDay $dealOfTheDay,
-    ) {}
+        private readonly DealOfTheDay     $dealOfTheDay,
+    )
+    {
+    }
 
     public function addRelatedTags(object $request, object $product): void
     {
         $tagIds = [];
         if ($request->tags != null) {
-            $tags = explode(',', $request->tags);
+            $tags = explode(",", $request->tags);
         }
         if (isset($tags)) {
             foreach ($tags as $value) {
@@ -108,16 +111,16 @@ class ProductRepository implements ProductRepositoryInterface
             ->first();
     }
 
-    public function getList(array $orderBy = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, ?int $offset = null): Collection|LengthAwarePaginator
+    public function getList(array $orderBy = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         // TODO: Implement getList() method.
     }
 
-    public function getListWhere(array $orderBy = [], ?string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, ?int $offset = null): Collection|LengthAwarePaginator
+    public function getListWhere(array $orderBy = [], string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         $query = $this->product->with($relations)->when(isset($filters['added_by']) && $this->isAddedByInHouse(addedBy: $filters['added_by']), function ($query) {
             return $query->where(['added_by' => 'admin']);
-        })->when(isset($filters['added_by']) && ! $this->isAddedByInHouse($filters['added_by']), function ($query) use ($filters) {
+        })->when(isset($filters['added_by']) && !$this->isAddedByInHouse($filters['added_by']), function ($query) use ($filters) {
             return $query->where(['added_by' => 'seller'])
                 ->when(isset($filters['request_status']) && $filters['request_status'] != 'all', function ($query) use ($filters) {
                     $query->where(['request_status' => $filters['request_status']]);
@@ -152,88 +155,76 @@ class ProductRepository implements ProductRepositoryInterface
             return $query->where(['status' => $filters['status']]);
         })->when(isset($filters['code']), function ($query) use ($filters) {
             return $query->where(['code' => $filters['code']]);
-        })->when(! empty($orderBy), function ($query) use ($orderBy) {
+        })->when(!empty($orderBy), function ($query) use ($orderBy) {
             $query->orderBy(array_key_first($orderBy), array_values($orderBy)[0]);
         });
 
         $filters += ['searchValue' => $searchValue];
-
         return $dataLimit == 'all' ? $query->get() : $query->paginate($dataLimit)->appends($filters);
     }
 
-    public function getListWithScope(
-        array $orderBy = [],
-        ?string $searchValue = null,
-        ?string $scope = null,
-        array $filters = [],
-        array $whereIn = [],
-        array $whereNotIn = [],
-        array $relations = [],
-        array $withCount = [],
-        int|string $dataLimit = DEFAULT_DATA_LIMIT,
-        ?int $offset = null
-    ): Collection|LengthAwarePaginator {
+    public function getListWithScope(array $orderBy = [], string $searchValue = null, string $scope = null, array $filters = [], array $whereIn = [], array $whereNotIn = [], array $relations = [], array $withCount = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
+    {
         $query = $this->product->with($relations)
-            ->when(! empty($withCount['reviews']), fn ($q) => $q->withCount($withCount['reviews']))
-            ->when($scope === 'active', fn ($q) => $q->active())
-            ->when($searchValue, function ($q) use ($searchValue) {
-                $productIds = $this->translation
-                    ->where('translationable_type', \App\Models\Product::class)
+            ->when(isset($withCount['reviews']), function ($query) use ($withCount) {
+                return $query->withCount($withCount['reviews']);
+            })
+            ->when(isset($scope) && $scope == 'active', function ($query) {
+                return $query->active();
+            })
+            ->when($searchValue, function ($query) use ($searchValue) {
+                $product_ids = $this->translation->where('translationable_type', 'App\Models\Product')
                     ->where('key', 'name')
                     ->where('value', 'like', "%{$searchValue}%")
                     ->pluck('translationable_id');
-
-                $q->where(function ($sub) use ($searchValue, $productIds) {
-                    $sub->where('name', 'like', "%{$searchValue}%")
-                        ->orWhereIn('id', $productIds);
+                return $query->where('name', 'like', "%{$searchValue}%")
+                    ->orWhereIn('id', $product_ids);
+            })
+            ->when(isset($filters['search_from']) && $filters['search_from'] == 'pos', function ($query) use ($filters) {
+                return $query->where(function ($query) use ($filters) {
+                    return $query->where('code', 'like', "%{$filters['keywords']}%")
+                        ->orWhere('name', 'like', "%{$filters['keywords']}%");
                 });
             })
-            ->when(! empty($filters['search_from']) && $filters['search_from'] === 'pos', fn ($q) => $q->where(function ($sub) use ($filters) {
-                $sub->where('code', 'like', "%{$filters['keywords']}%")
-                    ->orWhere('name', 'like', "%{$filters['keywords']}%");
+            ->when(isset($filters['added_by']) && $this->isAddedByInHouse(addedBy: $filters['added_by']), function ($query) {
+                return $query->where(['added_by' => 'admin']);
+            })->when(isset($filters['added_by']) && !$this->isAddedByInHouse($filters['added_by']), function ($query) use ($filters) {
+                return $query->where(['added_by' => 'seller'])
+                    ->when(isset($filters['request_status']), function ($query) use ($filters) {
+                        $query->where(['request_status' => $filters['request_status']]);
+                    })
+                    ->when(isset($filters['seller_id']), function ($query) use ($filters) {
+                        return $query->where(['user_id' => $filters['seller_id']]);
+                    });
             })
-            )
-            ->when(isset($filters['added_by']) && $this->isAddedByInHouse(addedBy: $filters['added_by']), fn ($q) => $q->where('added_by', 'admin')
-            )
-            ->when(isset($filters['added_by']) && ! $this->isAddedByInHouse($filters['added_by']), function ($q) use ($filters) {
-                $q->where('added_by', 'seller')
-                    ->when(isset($filters['request_status']), fn ($sub) => $sub->where('request_status', $filters['request_status']))
-                    ->when(isset($filters['seller_id']), fn ($sub) => $sub->where('user_id', $filters['seller_id']));
-            })
-            ->when(isset($filters['brand_id']), fn ($q) => $q->where('brand_id', $filters['brand_id']))
-            ->when(isset($filters['category_id']), fn ($q) => $q->where('category_id', $filters['category_id']))
-            ->when(isset($filters['sub_category_id']), fn ($q) => $q->where('sub_category_id', $filters['sub_category_id']))
-            ->when(isset($filters['sub_sub_category_id']), fn ($q) => $q->where('sub_sub_category_id', $filters['sub_sub_category_id']))
-            ->when(isset($filters['status']), fn ($q) => $q->where('status', $filters['status']))
-            ->when(! empty($whereIn), function ($q) use ($whereIn) {
-                foreach ($whereIn as $key => $values) {
-                    $q->whereIn($key, $values);
+            ->when(isset($filters['brand_id']), function ($query) use ($filters) {
+                return $query->where(['brand_id' => $filters['brand_id']]);
+            })->when(isset($filters['category_id']), function ($query) use ($filters) {
+                return $query->where(['category_id' => $filters['category_id']]);
+            })->when(isset($filters['sub_category_id']), function ($query) use ($filters) {
+                return $query->where(['sub_category_id' => $filters['sub_category_id']]);
+            })->when(isset($filters['status']), function ($query) use ($filters) {
+                return $query->where(['status' => $filters['status']]);
+            })->when(isset($whereIn), function ($query) use ($whereIn) {
+                foreach ($whereIn as $key => $whereInIndex) {
+                    return $query->whereIn($key, $whereInIndex);
                 }
             })
-            ->when(! empty($whereNotIn), function ($q) use ($whereNotIn) {
-                foreach ($whereNotIn as $key => $values) {
-                    $q->whereNotIn($key, $values);
+            ->when(isset($filters['sub_sub_category_id']), function ($query) use ($filters) {
+                return $query->where(['sub_sub_category_id' => $filters['sub_sub_category_id']]);
+            })->when($whereNotIn, function ($query) use ($whereNotIn) {
+                foreach ($whereNotIn as $key => $whereNotInIndex) {
+                    $query->whereNotIn($key, $whereNotInIndex);
                 }
+            })->when(!empty($orderBy), function ($query) use ($orderBy) {
+                $query->orderBy(array_key_first($orderBy), array_values($orderBy)[0]);
             });
 
-        // stable order
-        if (! empty($orderBy)) {
-            $query->orderBy(array_key_first($orderBy), array_values($orderBy)[0]);
-        } else {
-            $query->orderBy('id', 'desc');
-        }
-
         $filters += ['searchValue' => $searchValue];
-
-        // handle "all" or numeric dataLimit
-        $dataLimit = $dataLimit === 'all' ? 'all' : (int) $dataLimit;
-
-        return $dataLimit === 'all'
-            ? $query->get()
-            : $query->paginate($dataLimit, ['*'], 'deal_page')->appends($filters);
+        return $dataLimit == 'all' ? $query->get() : $query->paginate($dataLimit)->appends($filters);
     }
 
-    public function getWebListWithScope(array $orderBy = [], ?string $searchValue = null, ?string $scope = null, array $filters = [], array $whereHas = [], array $whereIn = [], array $whereNotIn = [], array $relations = [], array $withCount = [], array $withSum = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, ?int $offset = null): Collection|LengthAwarePaginator
+    public function getWebListWithScope(array $orderBy = [], string $searchValue = null, string $scope = null, array $filters = [], array $whereHas = [], array $whereIn = [], array $whereNotIn = [], array $relations = [], array $withCount = [], array $withSum = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         $query = $this->product
             ->when(isset($scope) && $scope == 'active', function ($query) {
@@ -241,11 +232,11 @@ class ProductRepository implements ProductRepositoryInterface
             })
             ->when(isset($filters['added_by']) && $this->isAddedByInHouse(addedBy: $filters['added_by']), function ($query) {
                 return $query->where(['added_by' => 'admin']);
-            })->when(isset($filters['added_by']) && ! $this->isAddedByInHouse($filters['added_by']), function ($query) {
+            })->when(isset($filters['added_by']) && !$this->isAddedByInHouse($filters['added_by']), function ($query) use ($filters) {
                 return $query->where(['added_by' => 'seller']);
             })
             ->when(isset($relations['reviews']), function ($query) use ($relations) {
-                return $query->with(isset($relations['reviews']), function ($query) {
+                return $query->with(isset($relations['reviews']), function ($query) use($relations) {
                     return $query->active();
                 });
             })
@@ -269,7 +260,7 @@ class ProductRepository implements ProductRepositoryInterface
                     });
                 }]);
             })
-            ->when(isset($whereHas['reviews']), function ($query) {
+            ->when(isset($whereHas['reviews']), function ($query) use ($whereHas) {
                 return $query;
             })
             ->when(isset($withCount['reviews']), function ($query) use ($withCount) {
@@ -283,7 +274,6 @@ class ProductRepository implements ProductRepositoryInterface
                         $query->where($sum['whereColumn'], $sum['whereValue']);
                     });
                 }
-
                 return $query->withSum($withSum['orderDetails']);
             })
             ->when(isset($withSum['qty']), function ($query) use ($withSum) {
@@ -294,7 +284,6 @@ class ProductRepository implements ProductRepositoryInterface
                     ->where('key', 'name')
                     ->where('value', 'like', "%{$searchValue}%")
                     ->pluck('translationable_id');
-
                 return $query->where('name', 'like', "%{$searchValue}%")->orWhereIn('id', $product_ids);
             })->when(isset($filters['seller_id']), function ($query) use ($filters) {
                 return $query->where('user_id', $filters['seller_id']);
@@ -314,12 +303,11 @@ class ProductRepository implements ProductRepositoryInterface
                 foreach ($whereNotIn as $key => $whereNotInIndex) {
                     $query->whereNotIn($key, $whereNotInIndex);
                 }
-            })->when(! empty($orderBy), function ($query) use ($orderBy) {
+            })->when(!empty($orderBy), function ($query) use ($orderBy) {
                 $query->orderBy(array_key_first($orderBy), array_values($orderBy)[0]);
             });
 
         $filters += ['searchValue' => $searchValue];
-
         return $dataLimit == 'all' ? $query->get() : $query->paginate($dataLimit)->appends($filters);
     }
 
@@ -327,13 +315,13 @@ class ProductRepository implements ProductRepositoryInterface
     {
         return $this->product->where('id', $id)->update($data);
     }
-
     public function updateByParams(array $params, array $data): bool
     {
         return $this->product->where($params)->update($data);
     }
 
-    public function getListWhereNotIn(array $filters = [], array $whereNotIn = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, ?int $offset = null): Collection|LengthAwarePaginator
+
+    public function getListWhereNotIn(array $filters = [], array $whereNotIn = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         return $this->product->when($whereNotIn, function ($query) use ($whereNotIn) {
             foreach ($whereNotIn as $key => $whereNotInIndex) {
@@ -346,7 +334,7 @@ class ProductRepository implements ProductRepositoryInterface
         })->get();
     }
 
-    public function getTopRatedList(array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, ?int $offset = null): Collection|LengthAwarePaginator
+    public function getTopRatedList(array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         return $this->product->with($relations)->where($filters)
             ->with('reviews', function ($query) {
@@ -354,7 +342,7 @@ class ProductRepository implements ProductRepositoryInterface
                     $query->active();
                 });
             })
-            ->withCount(['reviews' => function ($query) {
+            ->withCount(['reviews' => function ($query){
                 return $query->whereNull('delivery_man_id');
             }])
             ->withAvg('rating as ratings_average', 'rating')
@@ -362,12 +350,12 @@ class ProductRepository implements ProductRepositoryInterface
             ->get();
     }
 
-    public function getTopSellList(array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, ?int $offset = null): Collection|LengthAwarePaginator
+    public function getTopSellList(array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         return $this->product->with($relations)
             ->when(isset($filters['added_by']) && $this->isAddedByInHouse(addedBy: $filters['added_by']), function ($query) {
                 return $query->where(['added_by' => 'admin']);
-            })->when(isset($filters['added_by']) && ! $this->isAddedByInHouse($filters['added_by']), function ($query) use ($filters) {
+            })->when(isset($filters['added_by']) && !$this->isAddedByInHouse($filters['added_by']), function ($query) use ($filters) {
                 return $query->where(['added_by' => 'seller', 'request_status' => $filters['request_status']]);
             })->when(isset($filters['seller_id']), function ($query) use ($filters) {
                 return $query->where('user_id', $filters['seller_id']);
@@ -387,7 +375,7 @@ class ProductRepository implements ProductRepositoryInterface
         return $this->product->where($params)->delete();
     }
 
-    public function getStockLimitListWhere(array $orderBy = [], ?string $searchValue = null, array $filters = [], array $withCount = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, ?int $offset = null): Collection|LengthAwarePaginator
+    public function getStockLimitListWhere(array $orderBy = [], string $searchValue = null, array $filters = [], array $withCount = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         $stockLimit = getWebConfig(name: 'stock_limit');
         $query = $this->product->with($relations)
@@ -395,7 +383,7 @@ class ProductRepository implements ProductRepositoryInterface
             ->when($this->isAddedByInHouse(addedBy: $filters['added_by']), function ($query) {
                 return $query->where(['added_by' => 'admin']);
             })
-            ->when(! $this->isAddedByInHouse($filters['added_by']), function ($query) use ($filters) {
+            ->when(!$this->isAddedByInHouse($filters['added_by']), function ($query) use ($filters) {
                 return $query->where(['added_by' => 'seller', 'product_type' => 'physical'])
                     ->when(isset($filters['request_status']), function ($query) use ($filters) {
                         return $query->where(['request_status' => $filters['request_status']]);
@@ -416,12 +404,11 @@ class ProductRepository implements ProductRepositoryInterface
                 return $query->where('name', 'like', "%{$searchValue}%")->orWhereIn('id', $product_ids);
             })
             ->where('current_stock', '<', $stockLimit)
-            ->when(! empty($orderBy), function ($query) use ($orderBy) {
+            ->when(!empty($orderBy), function ($query) use ($orderBy) {
                 return $query->orderBy(array_key_first($orderBy), array_values($orderBy)[0]);
             });
 
         $filters += ['searchValue' => $searchValue];
-
         return $dataLimit == 'all' ? $query->get() : $query->paginate($dataLimit)->appends($filters);
     }
 
