@@ -2,24 +2,24 @@
 
 @php($announcement=getWebConfig(name: 'announcement'))
 <style>
-/* Mobile Menu Left Side Styles */
-@media (max-width: 767.98px) {
-    /* Force the sub-list to be a normal block element instead of a popup */
-    .mobile-child-list {
-        position: static !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        width: 100% !important;
-        transform: none !important;
-    }
+    /* Mobile Menu Left Side Styles */
+    @media (max-width: 767.98px) {
+        .mobile-child-list {
+            position: static !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            width: 100% !important;
+            transform: none !important;
+        }
 
-    /* Rotate arrow when open */
-    .has-children.opened i {
-        transform: rotate(90deg);
-    }
+        /* Rotate arrow when open */
+        .has-children.opened i {
+            transform: rotate(90deg);
+        }
 
-    .transition-arrow {
-        transition: transform 0.3s ease;
+        .transition-arrow {
+            transition: transform 0.3s ease;
+        }
     }
         .mobile-menu-left {
             position: fixed !important;
@@ -279,7 +279,7 @@
         }
 
         .mobile-nav-menu .dropdown-menu.scroll-bar::-webkit-scrollbar-track {
-            background: transparent !important;
+            /* background: transparent !important; */
         }
 
         .mobile-nav-menu .dropdown-menu.scroll-bar::-webkit-scrollbar-thumb {
@@ -322,7 +322,7 @@
             color: #ffffff !important;
             padding: 8px 15px !important;
             border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-            background: transparent !important;
+            /* background: transparent !important; */
             font-size: 13px !important;
         }
 
@@ -338,23 +338,26 @@
 
         /* Sub-menu styling */
         .mobile-nav-menu .sub-menu {
-            position: absolute !important;
-            left: 100% !important;
-            top: 0 !important;
-            background: #ffffff !important;
-            border: 1px solid rgba(0,0,0,0.1) !important;
-            border-radius: 6px !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-            padding: 4px 0 !important;
-            min-width: 180px !important;
-            max-height: 60vh !important;
-            overflow-y: auto !important;
-            z-index: 100001 !important;
+            position: static !important; /* Changed from absolute */
             display: none !important;
+            visibility: visible !important; /* Remove hidden !important */
+            opacity: 1 !important;        /* Remove opacity 0 !important */
+            width: 100% !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding-left: 20px !important; /* Indent sub-items */
         }
 
         .mobile-nav-menu .dropdown-submenu:hover .sub-menu {
             display: block !important;
+        }
+        .mobile-nav-menu .dropdown-submenu .fa-angle-right {
+            transition: transform 0.3s ease;
+        }
+        .mobile-nav-menu .dropdown-submenu .sub-menu.show + a i,
+        .mobile-nav-menu .dropdown-submenu.active i {
+            transform: rotate(90deg);
         }
 
         .mobile-nav-menu .sub-menu.show {
@@ -416,7 +419,7 @@
             padding: 8px 12px !important;
             border-radius: 0 !important;
             margin: 0 !important;
-            background: transparent !important;
+            /* background: transparent !important; */
             border-bottom: 1px solid rgba(0,0,0,0.05) !important;
             font-size: 14px !important;
             line-height: 1.4 !important;
@@ -496,7 +499,7 @@
                 color: #ffffff !important;
                 padding: 8px 15px !important;
                 border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-                background: transparent !important;
+                /* background: transparent !important; */
                 font-size: 13px !important;
             }
 
@@ -582,7 +585,7 @@
                 color: #ffffff !important;
                 padding: 8px 15px !important;
                 border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-                background: transparent !important;
+                /* background: transparent !important; */
                 font-size: 13px !important;
                 display: block !important;
                 width: 100% !important;
@@ -631,7 +634,7 @@
             color: #ffffff !important;
             padding: 8px 15px !important;
             border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-            background: transparent !important;
+            /* background: transparent !important; */
             font-size: 13px !important;
         }
 
@@ -669,7 +672,7 @@
             color: #ffffff !important;
             padding: 8px 15px !important;
             border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-            background: transparent !important;
+            /* background: transparent !important; */
             font-size: 13px !important;
             display: block !important;
             width: 100% !important;
@@ -685,7 +688,7 @@
             left: 0 !important;
             width: auto !important;
             height: auto !important;
-            background: transparent !important;
+            /* background: transparent !important; */
             z-index: auto !important;
             transition: none !important;
             overflow: visible !important;
@@ -702,13 +705,13 @@
             align-items: inherit !important;
             font-weight: inherit !important;
             text-decoration: inherit !important;
-            background: transparent !important;
+            /* background: transparent !important; */
             backdrop-filter: none !important;
             border: none !important;
         }
 
         .mobile-nav-link:hover {
-            background: transparent !important;
+            /* background: transparent !important; */
             color: inherit !important;
             transform: none !important;
             text-decoration: inherit !important;
@@ -732,7 +735,7 @@
             padding: 15px 10px !important;
             margin: 0 !important;
             color: inherit !important;
-            background: transparent !important;
+            /* background: transparent !important; */
             border: none !important;
             border-radius: 0 !important;
             transition: color 0.3s ease !important;
@@ -740,7 +743,7 @@
 
         .navbar-nav .nav-link:hover {
             color: #007bff !important;
-            background: transparent !important;
+            /* background: transparent !important; */
             transform: none !important;
         }
 
@@ -757,7 +760,7 @@
         .navbar-nav .dropdown-item {
             color: #000000 !important;
             padding: 8px 16px !important;
-            background: transparent !important;
+            /* background: transparent !important; */
             border: none !important;
             border-radius: 0 !important;
             transition: background-color 0.2s ease !important;
@@ -791,7 +794,7 @@
         .navbar-nav .sub-menu .dropdown-item {
             color: #000000 !important;
             padding: 8px 16px !important;
-            background: transparent !important;
+            /* background: transparent !important; */
             border: none !important;
             border-radius: 0 !important;
             transition: background-color 0.2s ease !important;
@@ -820,7 +823,7 @@
             padding: 15px 10px !important;
             margin: 0 !important;
             color: inherit !important;
-            background: transparent !important;
+            /* background: transparent !important; */
             border: none !important;
             border-radius: 0 !important;
             transition: color 0.3s ease !important;
@@ -830,7 +833,7 @@
 
         .mobile-nav-menu .nav-link:hover {
             color: #007bff !important;
-            background: transparent !important;
+            /* background: transparent !important; */
             transform: none !important;
         }
 
@@ -846,7 +849,7 @@
         .mobile-nav-menu .dropdown-item {
             color: #000000 !important;
             padding: 8px 16px !important;
-            background: transparent !important;
+            /* background: transparent !important; */
             border: none !important;
             border-radius: 0 !important;
             transition: background-color 0.2s ease !important;
@@ -879,7 +882,7 @@
         .mobile-nav-menu .sub-menu .dropdown-item {
             color: #000000 !important;
             padding: 8px 16px !important;
-            background: transparent !important;
+            /* background: transparent !important; */
             border: none !important;
             border-radius: 0 !important;
             transition: background-color 0.2s ease !important;
@@ -967,7 +970,7 @@
         color: #ffffff !important;
         padding: 8px 15px !important;
         border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-        background: transparent !important;
+        /* background: transparent !important; */
         font-size: 13px !important;
     }
 
@@ -1005,7 +1008,7 @@
         color: #000 !important;
         padding: 8px 15px !important;
         border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-        background: transparent !important;
+        /* background: transparent !important; */
         font-size: 13px !important;
         display: block !important;
         width: 100% !important;
@@ -1043,7 +1046,7 @@
         .mobile-nav-menu .dropdown-item {
             color: #000000 !important;
             border-bottom: 1px solid rgba(0,0,0,0.05) !important;
-            background: transparent !important;
+            /* background: transparent !important; */
         }
 
         .mobile-nav-menu .dropdown-item:hover {
@@ -1063,7 +1066,7 @@
         .mobile-nav-menu .sub-menu .dropdown-item {
             color: #000000 !important;
             border-bottom: 1px solid rgba(0,0,0,0.05) !important;
-            background: transparent !important;
+            /* background: transparent !important; */
         }
 
         .mobile-nav-menu .sub-menu .dropdown-item:hover {
@@ -1073,6 +1076,25 @@
         }
     }
     @media (max-width: 767px) {
+        /* Position the submenu */
+        .dropdown-submenu {
+            position: relative !important;
+        }
+
+        .dropdown-submenu > .sub-menu {
+            top: 0 !important;
+            left: 100% !important;
+            margin-top: -1px !important;
+            display: none !important;
+        }
+
+        /* RTL support */
+        .dropdown-menu-right .dropdown-submenu > .sub-menu {
+            right: 100% !important;
+            left: auto !important;
+        }
+
+
         .mobile-nav-menu .dropdown-menu, .mobile-nav-menu .dropdown-submenu > .sub-menu {
             position: static !important;
         }
@@ -1106,7 +1128,7 @@
                                 <i class="fa fa-search" aria-hidden="true"></i>
                             </a>
                         </div>
-{{--                    <a href="{{route('shop-cart')}}" class="">
+                        {{--<a href="{{route('shop-cart')}}" class="">
                             <i class="fa fa-shopping-cart"></i>
                         </a> --}}
                         <div id="cart_items">
@@ -1365,16 +1387,17 @@
                                     </div>
 
                                     @if($category->childes->count())
-                                        <ul class="mobile-child-list" id="sub-menu-{{ $category->id }}" style="display: none; list-style: none; padding-left: 20px;">
-                                            @foreach($category->childes as $sub)
-                                                <li>
-                                                    <a class="dropdown-item py-2" href="{{ route('products', ['id' => $sub->id, 'data_from' => 'category', 'page' => 1]) }}">
-                                                        {{ $sub->name }}
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
+                                    <ul class="mobile-child-list" style="display: none; list-style: none; padding-left: 20px;">
+                                        @foreach($category->childes as $sub)
+                                        <li>
+                                            <a class="dropdown-item py-2" href="{{ route('products', ['id' => $sub->id, 'data_from' => 'category', 'page' => 1]) }}">
+                                                {{ $sub->name }}
+                                            </a>
+                                        </li>
+                                        @endforeach
+                                    </ul>
                                     @endif
+                                </li>
                                 @endforeach
                             </ul>
                         </li>
@@ -1548,35 +1571,37 @@
 
         // Mobile Menu Functionality
         $(document).ready(function() {
-            function handleMenuClasses() {
-                const width = $(window).width();
-                const $lists = $('.mobile-child-list');
-
-                if (width >= 768) {
-                    // DESKTOP: Add sub-menu class, remove inline styles
-                    $lists.addClass('sub-menu').css('display', '');
-                } else {
-                    // MOBILE: Remove sub-menu class to kill fly-out styles
-                    $lists.removeClass('sub-menu');
-                }
-            }
-
-            // Run on load and on resize
-            handleMenuClasses();
-            $(window).on('resize', handleMenuClasses);
-
-            // Accordion Logic for Mobile
             $('.has-children').on('click', function(e) {
-                if ($(window).width() < 768) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    $(this).closest('li').find('.mobile-child-list').first().slideToggle(300);
-                    $(this).find('.transition-arrow').toggleClass('fa-rotate-90');
-                }
-            });
+        // Only run this logic on mobile
+        if ($(window).width() <= 767) {
+            e.preventDefault(); // Stop the link from navigating
+            e.stopPropagation();
+
+            // Find the sub-list directly under this list item
+            const $subList = $(this).closest('li').find('.mobile-child-list');
+
+            // Toggle the visibility
+            $subList.slideToggle(200);
+
+            // Toggle the arrow rotation class
+            $(this).toggleClass('opened');
+        }
+    });
             if ($(window).width() >= 768) {
 
-                // Main categories
+                $('.subcategory-toggle-btn').on('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Find the list immediately after this button's parent div
+                    const $list = $(this).closest('.dropdown-item').siblings('.mobile-sub-list');
+
+                    // Toggle the list and the arrow rotation
+                    $list.toggleClass('active');
+                    $(this).toggleClass('open');
+                });
+
+                // Main dropdown
                 $('.nav-item.dropdown').hover(
                     function () {
                         $(this).addClass('show');
@@ -1588,15 +1613,13 @@
                     }
                 );
 
-                // Subcategories (dropdown-submenu)
+                // Submenu
                 $('.dropdown-submenu').hover(
                     function () {
-                        $(this).addClass('show');
-                        $(this).children('.sub-menu').addClass('show');
+                        $(this).children('.sub-menu').addClass('show').show();
                     },
                     function () {
-                        $(this).removeClass('show');
-                        $(this).children('.sub-menu').removeClass('show');
+                        $(this).children('.sub-menu').removeClass('show').hide();
                     }
                 );
             }
@@ -1671,17 +1694,18 @@
             });
 
                     // Handle sub-category dropdowns
-            $('.mobile-nav-menu .dropdown-submenu .dropdown-item').on('click', function(e) {
-                const $subMenu = $(this).siblings('.sub-menu');
-                if ($subMenu.length > 0) {
+            $('.mobile-nav-menu .dropdown-submenu > .dropdown-item').on('click', function(e) {
+                if ($(window).width() <= 767) {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    // Close other sub-menus
-                    $('.sub-menu').not($subMenu).removeClass('show');
+                    const $subMenu = $(this).siblings('.sub-menu');
+
+                    // Toggle this menu
                     $subMenu.toggleClass('show');
 
-                    console.log('Sub-menu toggled:', $subMenu.hasClass('show'));
+                    // Optional: Close other open sub-menus at the same level
+                    $(this).closest('li').siblings().find('.sub-menu').removeClass('show');
                 }
             });
 
